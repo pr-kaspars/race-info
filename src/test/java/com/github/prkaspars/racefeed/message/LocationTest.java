@@ -17,7 +17,7 @@ class LocationTest {
   }
 
   @Test
-  @DisplayName("distance should be zero when coordinates are equal")
+  @DisplayName("distance should be a positive number between two points")
   void distance() {
     Location a = new Location(10, 10);
     Location b = new Location(11, 11);
