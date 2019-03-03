@@ -1,11 +1,10 @@
-package com.github.prkaspars.racefeed.service;
+package com.github.prkaspars.racefeed.component;
 
 import com.github.prkaspars.racefeed.model.Body;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 

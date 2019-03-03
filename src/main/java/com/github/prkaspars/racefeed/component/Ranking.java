@@ -1,4 +1,4 @@
-package com.github.prkaspars.racefeed.service;
+package com.github.prkaspars.racefeed.component;
 
 import com.github.prkaspars.racefeed.model.Body;
 
