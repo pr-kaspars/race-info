@@ -1,34 +1,46 @@
 package com.github.prkaspars.racefeed.model;
 
+import com.github.prkaspars.racefeed.message.Location;
+
 /**
- * Class represents moving body.
+ * Class represents a moving car.
  */
-public class Body {
+public class Car {
   private static final double mph = 2.2369363;
   private final int id;
-  private State state;
+  private Location location;
+  private State state = new State(0, 0, 0);
 
-  public Body(int id) {
+  public Car(int id) {
     this.id = id;
   }
 
   /**
-   * Displaces body and returns the object's state after displacement.
+   * Displaces car and returns new state after displacement.
+   *
+   * @param time     time of the event
+   * @param location new location
+   * @return new state
+   */
+  public State displace(long time, Location location) {
+    state = (this.location == null) ? new State(time, 0, 0) : displace(time, this.location.distance(location));
+    this.location = location;
+    return state;
+  }
+
+  /**
+   * Returns new state after displacement.
    *
    * @param time         time of the event
    * @param displacement distance in meters
    * @return new state
    */
-  public State displace(long time, double displacement) {
-    if (state == null) {
-      return state = new State(time, displacement, 0);
-    }
-
-    return state = new State(time, state.distance + displacement, displacement / ((time - state.time) / 1000.0));
+  private State displace(long time, double displacement) {
+    return new State(time, state.distance + displacement, displacement / ((time - state.time) / 1000.0));
   }
 
   /**
-   * Immutable class that represents body's current state.
+   * Immutable class that represents current state of the car.
    */
   public class State {
     private long time;
@@ -42,7 +54,7 @@ public class Body {
     }
 
     /**
-     * Returns body's identified.
+     * Returns cars's identified.
      *
      * @return ID
      */

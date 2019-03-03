@@ -1,6 +1,6 @@
 package com.github.prkaspars.racefeed.component;
 
-import com.github.prkaspars.racefeed.model.Body;
+import com.github.prkaspars.racefeed.model.Car;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,18 +9,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static java.util.Comparator.comparingDouble;
 
 public class Ranking {
-  private List<Body.State> stateBucket = new CopyOnWriteArrayList<>();
+  private List<Car.State> stateBucket = new CopyOnWriteArrayList<>();
 
-  public Optional<List<Body.State>> putState(Body.State state) {
+  public Optional<List<Car.State>> putState(Car.State state) {
     stateBucket.add(state);
     if (stateBucket.size() < 6) {
       return Optional.empty();
     }
 
-    List<Body.State> leaderBoard = stateBucket;
+    List<Car.State> leaderBoard = stateBucket;
     stateBucket = new CopyOnWriteArrayList<>();
 
-    leaderBoard.sort(comparingDouble(Body.State::getDistance).reversed());
+    leaderBoard.sort(comparingDouble(Car.State::getDistance).reversed());
     return Optional.of(leaderBoard);
   }
 }

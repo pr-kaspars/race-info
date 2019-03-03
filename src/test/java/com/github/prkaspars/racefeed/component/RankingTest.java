@@ -1,6 +1,6 @@
 package com.github.prkaspars.racefeed.component;
 
-import com.github.prkaspars.racefeed.model.Body;
+import com.github.prkaspars.racefeed.model.Car;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class RankingTest {
   @DisplayName("putState should return false when bucket is not full")
   public void putState() {
     Ranking ranking = new Ranking();
-    assertFalse(ranking.putState(new Body(1).new State(1, 1, 1)).isPresent());
+    assertFalse(ranking.putState(new Car(1).new State(1, 1, 1)).isPresent());
   }
 
   @Test
@@ -22,9 +22,9 @@ class RankingTest {
   public void putStateFullBucket() {
     Ranking ranking = new Ranking();
     for (int i = 1; i < 6; i++) {
-      assertFalse(ranking.putState(new Body(i).new State(1, 1, 1)).isPresent());
+      assertFalse(ranking.putState(new Car(i).new State(1, 1, 1)).isPresent());
     }
-    assertTrue(ranking.putState(new Body(6).new State(1, 1, 1)).isPresent());
+    assertTrue(ranking.putState(new Car(6).new State(1, 1, 1)).isPresent());
   }
 
   @Test
@@ -32,9 +32,9 @@ class RankingTest {
   public void putStateSortedList() {
     Ranking ranking = new Ranking();
     for (int i = 1; i < 6; i++) {
-      ranking.putState(new Body(i).new State(1, i * 2, 1));
+      ranking.putState(new Car(i).new State(1, i * 2, 1));
     }
-    List<Body.State> result = ranking.putState(new Body(6).new State(1, 6 * 2, 1)).get();
+    List<Car.State> result = ranking.putState(new Car(6).new State(1, 6 * 2, 1)).get();
     assertEquals(6, result.size());
     for (int i = 0; i < 6; i++) {
       int j = 6 - i;
