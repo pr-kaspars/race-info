@@ -1,5 +1,7 @@
 package com.github.prkaspars.racefeed.publisher;
 
+import com.github.prkaspars.racefeed.exception.RuntimeInterruptedException;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
@@ -20,7 +22,7 @@ public class MessagePublisher<T> implements Runnable {
       try {
         consumer.accept(queue.take());
       } catch (InterruptedException e) {
-        throw new RuntimeException(e);
+        throw new RuntimeInterruptedException("Problem receiving message", e);
       }
     }
   }
