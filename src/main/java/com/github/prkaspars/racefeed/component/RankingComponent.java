@@ -17,10 +17,21 @@ public class RankingComponent {
   private List<Car.State> stateBucket = new CopyOnWriteArrayList<>();
   private Predicate<List<Car.State>> predicate;
 
+  /**
+   * Creates an instance of RankingComponent.
+   *
+   * @param predicate condition when to update leader board based on collected state messages
+   */
   public RankingComponent(@Qualifier("rankingPredicate") Predicate<List<Car.State>> predicate) {
     this.predicate = predicate;
   }
 
+  /**
+   * Puts Car.State in bucket and returns sorted leader board if the bucket is full or empty Optional if not.
+   *
+   * @param state car state
+   * @return leader board or empty optional
+   */
   public Optional<List<Car.State>> putState(Car.State state) {
     stateBucket.add(state);
     if (predicate.negate().test(stateBucket)) {
@@ -33,6 +44,16 @@ public class RankingComponent {
     return Optional.of(leaderBoard);
   }
 
+  /**
+   * Returns a list of overtakes that happened compared to previous leader board.
+   * Tuple:
+   *  A - overtaker index
+   *  B - overtaken car index
+   *  C - overtake type
+   *
+   * @param p list of sorted car states
+   * @return list of overtakes
+   */
   synchronized List<Tuple<Integer, Integer, String>> overtakes(List<Car.State> p) {
     if (positions == null) {
       positions = p;

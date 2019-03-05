@@ -45,6 +45,12 @@ public class RaceInfoService implements ApplicationListener<ContextRefreshedEven
     this.queueComponent = queueComponent;
   }
 
+  /**
+   * Returns existing Car instance or creates new and puts in map.
+   *
+   * @param index car index
+   * @return the Car
+   */
   private Car getCar(int index) {
     Car car = cars.get(index);
     if (car != null) {
@@ -62,12 +68,22 @@ public class RaceInfoService implements ApplicationListener<ContextRefreshedEven
     }
   }
 
+  /**
+   * Accepts CarCoordinates and create put new Car.State in queue.
+   *
+   * @param coordinates CarCoordinates message
+   */
   void acceptCarCoordinates(CarCoordinates coordinates) {
     Car car = getCar(coordinates.getCarIndex());
     Car.State state = car.displace(coordinates.getTimestamp(), coordinates.getLocation());
     queueComponent.offerState(state);
   }
 
+  /**
+   * Accepts Car.State and creates speed and position CarStatus messages and overtake Events if any happened.
+   *
+   * @param state car state
+   */
   void acceptState(Car.State state) {
     queueComponent.offerStatus(newSpeedStatus(state.getId(), state.getSpeedMph(), state.getTime()));
 
@@ -91,6 +107,11 @@ public class RaceInfoService implements ApplicationListener<ContextRefreshedEven
       .forEach(queueComponent::offerEvent);
   }
 
+  /**
+   * Returns Runnable that takes Car.State messages from queue and calls State consumer.
+   *
+   * @return the Car.State consumer
+   */
   Runnable stateRunnable() {
     return () -> {
       while (!currentThread().isInterrupted()) {
@@ -103,6 +124,11 @@ public class RaceInfoService implements ApplicationListener<ContextRefreshedEven
     };
   }
 
+  /**
+   * Returns Runnable that takes CarStatus messages from queue and publishes them.
+   *
+   * @return the CarStatus publisher
+   */
   MessagePublisher<CarStatus> carStatusMessagePublisher() {
     return new MessagePublisher<>(queueComponent::takeStatus, m -> {
       try {
@@ -113,6 +139,11 @@ public class RaceInfoService implements ApplicationListener<ContextRefreshedEven
     });
   }
 
+  /**
+   * Returns Runnable that takes Event messages from queue and publishes them.
+   *
+   * @return the Event publisher
+   */
   MessagePublisher<Event> eventMessagePublisher() {
     return new MessagePublisher<>(queueComponent::takeEvent, m -> {
       try {
@@ -123,6 +154,11 @@ public class RaceInfoService implements ApplicationListener<ContextRefreshedEven
     });
   }
 
+  /**
+   * Initialises all queue subscribers and message publishers.
+   *
+   * @param event initialized or refreshed event
+   */
   @Override
   public void onApplicationEvent(ContextRefreshedEvent event) {
     if (initialized) {

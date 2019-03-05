@@ -5,10 +5,12 @@ import com.github.prkaspars.racefeed.message.Event;
 import com.github.prkaspars.racefeed.model.Car;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TransferQueue;
 
+/**
+ * Component that provides access to internal message transfer queues.
+ */
 @Component
 public class QueueComponent {
   private TransferQueue<Car.State> states = new LinkedTransferQueue<>();
@@ -33,10 +35,6 @@ public class QueueComponent {
 
   public boolean offerEvent(Event event) {
     return events.offer(event);
-  }
-
-  public boolean addAllEvents(Collection<Event> collection) {
-    return events.addAll(collection);
   }
 
   public Event takeEvent() throws InterruptedException {
