@@ -22,7 +22,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-class MessageClientTest {
+class MessageServiceTest {
   private IMqttClient iMqttClient;
   private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -36,8 +36,8 @@ class MessageClientTest {
   public void publishCarStatus() throws MqttException, JsonProcessingException {
     ArgumentCaptor<MqttMessage> argumentCaptor = ArgumentCaptor.forClass(MqttMessage.class);
     CarStatus carStatus = CarStatus.newSpeedStatus(1, 1, 1);
-    MessageClient client = new MessageClient(iMqttClient, objectMapper);
-    client.publishCarStatus(carStatus);
+    MessageService service = new MessageService(iMqttClient, objectMapper);
+    service.publishCarStatus(carStatus);
 
     verify(iMqttClient, times(1)).publish(eq("carStatus"), argumentCaptor.capture());
     assertEquals("{\"type\":\"SPEED\",\"carIndex\":1,\"value\":1,\"timestamp\":1}", new String(argumentCaptor.getValue().getPayload()));
@@ -47,8 +47,8 @@ class MessageClientTest {
   @DisplayName("publishEvent should serialize bean and publish message to the `events` topic")
   public void publishEvent() throws MqttException, JsonProcessingException {
     ArgumentCaptor<MqttMessage> argumentCaptor = ArgumentCaptor.forClass(MqttMessage.class);
-    MessageClient client = new MessageClient(iMqttClient, objectMapper);
-    client.publishEvent(new Event(999, "foo"));
+    MessageService service = new MessageService(iMqttClient, objectMapper);
+    service.publishEvent(new Event(999, "foo"));
 
     verify(iMqttClient, times(1)).publish(eq("events"), argumentCaptor.capture());
     assertEquals("{\"timestamp\":999,\"text\":\"foo\"}", new String(argumentCaptor.getValue().getPayload()));
@@ -58,8 +58,8 @@ class MessageClientTest {
   @DisplayName("subscribeToCarCoordinates should subscribe to `carCoordinates` topic")
   @SuppressWarnings("unchecked")
   public void subscribeToCarCoordinates() throws Exception {
-    MessageClient client = new MessageClient(iMqttClient, objectMapper);
-    client.subscribeToCarCoordinates(m -> {
+    MessageService service = new MessageService(iMqttClient, objectMapper);
+    service.subscribeToCarCoordinates(m -> {
     });
 
     verify(iMqttClient, times(1)).subscribe(eq("carCoordinates"), eq(0), any(IMqttMessageListener.class));
@@ -73,8 +73,8 @@ class MessageClientTest {
     ArgumentCaptor<CarCoordinates> carCoordinatesArgumentCaptor = ArgumentCaptor.forClass(CarCoordinates.class);
     Consumer<CarCoordinates> consumer = mock(Consumer.class);
 
-    MessageClient client = new MessageClient(iMqttClient, objectMapper);
-    client.subscribeToCarCoordinates(consumer);
+    MessageService service = new MessageService(iMqttClient, objectMapper);
+    service.subscribeToCarCoordinates(consumer);
 
     verify(iMqttClient, times(1)).subscribe(eq("carCoordinates"), eq(0), listenerArgumentCaptor.capture());
     String msg = "{\"timestamp\":1541693114862,\"carIndex\":2,\"location\":{\"lat\":51.349937311969725,\"long\":-0.544958142167281}}";

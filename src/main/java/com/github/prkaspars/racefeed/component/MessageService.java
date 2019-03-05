@@ -8,10 +8,13 @@ import com.github.prkaspars.racefeed.message.Event;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
-public class MessageClient {
+@Component
+public class MessageService {
   private static final String TOPIC_CAR_COORDINATES = "carCoordinates";
   private static final String TOPIC_CAR_STATUS = "carStatus";
   private static final String TOPIC_EVENTS = "events";
@@ -19,7 +22,8 @@ public class MessageClient {
   private IMqttClient iMqttClient;
   private ObjectMapper objectMapper;
 
-  public MessageClient(IMqttClient iMqttClient, ObjectMapper objectMapper) {
+  @Autowired
+  public MessageService(IMqttClient iMqttClient, ObjectMapper objectMapper) {
     this.iMqttClient = iMqttClient;
     this.objectMapper = objectMapper;
   }
