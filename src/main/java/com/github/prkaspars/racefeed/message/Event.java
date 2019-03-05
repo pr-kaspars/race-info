@@ -8,6 +8,10 @@ public class Event {
     return new Event(timestamp, String.format("Car %d races ahead of Car %d in a dramatic overtake.", c1, c2));
   }
 
+  public static Event newRegularOvertake(long timestamp, int c1, int c2) {
+    return new Event(timestamp, String.format("Car %d races ahead of Car %d in a regular overtake.", c1, c2));
+  }
+
   public Event(long timestamp, String text) {
     this.timestamp = timestamp;
     this.text = text;
