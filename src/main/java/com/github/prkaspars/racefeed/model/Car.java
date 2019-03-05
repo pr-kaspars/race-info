@@ -97,5 +97,25 @@ public class Car {
     public int getSpeedMph() {
       return (int) Math.round(speed * mph);
     }
+
+    /**
+     * Returns true if both states have the same ID.
+     *
+     * @param s other state
+     * @return true is IDs are equal
+     */
+    public boolean isIdEqual(State s) {
+      return id == s.getId();
+    }
+
+    /**
+     * Return difference between two distances.
+     *
+     * @param state other state
+     * @return distance difference
+     */
+    public double delta(State state) {
+      return Math.abs(distance - state.distance);
+    }
   }
 }

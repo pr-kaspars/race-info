@@ -36,4 +36,25 @@ class CarTest {
     Car.State state = new Car(4).new State(1, 1, 500);
     assertEquals(1118, state.getSpeedMph());
   }
+
+  @Test
+  @DisplayName("isIdEqual should return true when IDs are equal")
+  public void isIdEqualTrue() {
+    Car.State state = new Car(4).new State(1, 1, 500);
+    assertTrue(state.isIdEqual(new Car(4).new State(2, 2, 600)));
+  }
+
+  @Test
+  @DisplayName("isIdEqual should return false when IDs are not equal")
+  public void isIdEqualFalse() {
+    Car.State state = new Car(4).new State(1, 1, 500);
+    assertFalse(state.isIdEqual(new Car(5).new State(2, 2, 600)));
+  }
+
+  @Test
+  @DisplayName("delta skhould return distance difference")
+  public void delta() {
+    Car.State state = new Car(4).new State(1, 10, 500);
+    assertEquals(90.0, state.delta(new Car(5).new State(2, 100, 600)));
+  }
 }
