@@ -1,26 +1,26 @@
 package com.github.prkaspars.racefeed.publisher;
 
 import com.github.prkaspars.racefeed.exception.RuntimeInterruptedException;
+import com.github.prkaspars.racefeed.util.InterruptedSupplier;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
 import static java.lang.Thread.currentThread;
 
 public class MessagePublisher<T> implements Runnable {
   private Consumer<T> consumer;
-  private BlockingQueue<T> queue;
+  private InterruptedSupplier<T> supplier;
 
-  public MessagePublisher(BlockingQueue<T> queue, Consumer<T> consumer) {
+  public MessagePublisher(InterruptedSupplier<T> supplier, Consumer<T> consumer) {
     this.consumer = consumer;
-    this.queue = queue;
+    this.supplier = supplier;
   }
 
   @Override
   public void run() {
     while (!currentThread().isInterrupted()) {
       try {
-        consumer.accept(queue.take());
+        consumer.accept(supplier.get());
       } catch (InterruptedException e) {
         throw new RuntimeInterruptedException("Problem receiving message", e);
       }

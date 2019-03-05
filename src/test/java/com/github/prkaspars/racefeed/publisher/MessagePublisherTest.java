@@ -29,7 +29,7 @@ class MessagePublisherTest {
       .thenReturn(o)
       .thenThrow(new InterruptedException("break"));
 
-    MessagePublisher<Object> publisher = new MessagePublisher<>(queue, consumer);
+    MessagePublisher<Object> publisher = new MessagePublisher<>(queue::take, consumer);
     assertThrows(RuntimeException.class, publisher::run);
 
     verify(queue, times(2)).take();
@@ -40,7 +40,7 @@ class MessagePublisherTest {
   @DisplayName("run should exit when thread is interrupted")
   public void runInterrupted() throws InterruptedException {
     Thread.currentThread().interrupt();
-    new MessagePublisher<>(queue, consumer).run();
+    new MessagePublisher<>(queue::take, consumer).run();
 
     verify(queue, times(0)).take();
     verify(consumer, times(0)).accept(any());
