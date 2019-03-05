@@ -8,19 +8,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RankingTest {
+class RankingComponentTest {
 
   @Test
   @DisplayName("putState should return false when bucket is not full")
   public void putState() {
-    Ranking ranking = new Ranking();
+    RankingComponent ranking = new RankingComponent(l -> l.size() == 6);
     assertFalse(ranking.putState(new Car(1).new State(1, 1, 1)).isPresent());
   }
 
   @Test
   @DisplayName("putState should return false when bucket is full")
   public void putStateFullBucket() {
-    Ranking ranking = new Ranking();
+    RankingComponent ranking = new RankingComponent(l -> l.size() == 6);
     for (int i = 1; i < 6; i++) {
       assertFalse(ranking.putState(new Car(i).new State(1, 1, 1)).isPresent());
     }
@@ -30,7 +30,7 @@ class RankingTest {
   @Test
   @DisplayName("putState should return false when bucket is full")
   public void putStateSortedList() {
-    Ranking ranking = new Ranking();
+    RankingComponent ranking = new RankingComponent(l -> l.size() == 6);
     for (int i = 1; i < 6; i++) {
       ranking.putState(new Car(i).new State(1, i * 2, 1));
     }
